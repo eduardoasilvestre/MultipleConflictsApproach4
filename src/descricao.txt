@@ -1,0 +1,202 @@
+ESTE ARQUIVO FAZ A ANÁLISE DO CASO 4
+========================================================================================================================
+========================================================================================================================
+ESTUDOS DE CASO DIA 22-12-2015
+========================================================================================================================
+========================================================================================================================
+ALGORITMO:
+NÚMERO DE VARIÁVEIS: n = N
+INTERVALO PARA AS VARIÁVEIS: ilimitado, mas o exemplo é limitado
+NÚMERO DE AÇÕES: m (vestir)
+NÚMERO DE NORMAS: n
+
+========================================================================================================================
+CASOS POSSÍVEIS
+========================================================================================================================
+CASO 1 - action											
+CASO 2 - action (param1, param2, param3, ...)
+CASO 3 - action {param1 = {value1}, param2 = {value2}, ...}
+CASO 4 - action obj (param1 = {value1}, param2 = {value2}, ...)
+
+RESUMO
+1 - Existem infinitas maneiras de se representar uma norma de acordo com sua expressividade.
+2 - Os conflitos múltiplos ocorre: CASO 4
+3 - As abordagens implementadas até a presente data: 1, 2  e 4
+
+========================================================================================================================
+ANÁLISE CASO 1 - action
+========================================================================================================================
+-NÃO HÁ CONFLITO MÚLTIPLO
+-JÁ RESOLVIDO
+
+EXEMPLOS:
+OBRIGADO estudar
+PROIBIDO estudar
+
+PROIBIDO estudar
+PERMITIDO estudar
+
+ESTRATÉGIA DE ALGORITMO:
+-VERIFICAR SE OS CONCEITOS DEÔNTICOS SÃO OPOSTOS E AS NORMAS TE AS MESMAS AÇÕES
+
+========================================================================================================================
+ANÁLISE CASO 2 - action (param1, param2, param3, ...)
+========================================================================================================================
+-PARÂMETROS COM O MESMO PESO
+-NÃO EXISTE VALORES PARA OS PARÂMETROS
+-NÃO EXISTE CONFLITO MÚLTIPLO
+-JÁ RESOLVIDO
+
+==>EXEMPLOS DOMÍNIO 1
+carboidrato =  batata, 	bolacha, 	arroz
+gordura 	=  abacate, 	torresmo, 	azeite
+proteína 	=  frango, 	soja, 		peixe
+
+OBRIGADO comer(batata, bolacha, arroz)
+PROIBIDO comer(abacate, torresmo, azeite)
+
+OBRIGADO comer(batata, abacate, frango)
+PROIBIDO comer(bolacha, torresmo, soja)
+
+==>EXEMPLOS DOMÍNIO 2
+curso 	= computação, matemática, física
+humanas = história, filosofia, sociologia
+saúde 	= medicina, enfermage, odonto
+
+PERMITIDO cursar(computação, matemática, física)
+PROIBIDO crusar(medicina, enfermagem, odonto)
+
+OBRIGADO cursar(computação, matemática, física)
+PROIBIDO crusar(medicina, física, odonto)
+
+ESTRATÉGIA DE ALGORITMO:
+le todos os permitidos e obrigados e coloca numa lista
+depois le os proibidos e verifica se tem interseção
+
+
+========================================================================================================================
+ANÁLISE CASO 3 - action {param1 = {value1}, param2 = {value2}, ...}
+========================================================================================================================
+==>EXEMPLOS DOMÍNIO 1
+carboidrato =  batata, 	bolacha, 	arroz
+gordura 	=  abacate, 	torresmo, 	azeite
+proteína 	=  frango, 	soja, 		peixe
+
+OBRIGADO comer(carboidrato={batata}, gordura={torresmo}, proteína={frango})
+PROIBIDO comer(carboidrato={batata}, gordura={torresmo}, proteína={frango})
+PERMITIDO comer(carboidrato={bolacha}, gordura={abacate}, proteína={soja})
+
+OBRIGADO comer(carboidrato={batata}, gordura={A}, proteína={frango})
+PROIBIDO comer(carboidrato={batata}, gordura={A}, proteína={frango})
+PERMITIDO comer(carboidrato={bolacha}, gordura={abacate}, proteína={soja})
+NESTE TIPO DE CENÁRIO NÃO TEM CONFLITO MÚLTIPLO
+
+ANALISANDO ESSAS DUAS NORMAS NÃO TEM CONFLITO:
+OBRIGADO comer(carboidrato={batata}, gordura={A}, proteína={frango})
+PERMITIDO comer(carboidrato={bolacha}, gordura={abacate}, proteína={soja})
+
+MAS SE ADICIONAR UMA TERCEIRA:
+OBRIGADO comer(carboidrato={batata}, gordura={A}, proteína={frango})
+PERMITIDO comer(carboidrato={bolacha}, gordura={abacate}, proteína={soja})
+PROIBIDO comer(carboidrato={batata}, gordura={A}, proteína={frango})
+
+ENTRETANTO NÃO É PRECIO OLHAR A TERCEIRA NORMA PARA VERIFICAR O CONFLITO. BASTA ANALISAR AS DUAS NORMAS CORRETAS
+
+
+ESTRATÉGIA DE ALGORITMO:
+-COVERTE NORMAS PARA PERMITIDO
+-VERIFICA SE A INTERSEÇÃO DE ALGUM PARÂMETRO É VAZIA
+
+==>EXEMPLOS DOMÍNIO 2
+X = posições no eixo x
+Y = posições no exio y
+mover (x = 10, y = 15)
+mover (x = 12, y = -13)
+
+PERMITIDO estacionar ( km > 30)
+PERMITIDO estacionar ( km < 50)
+
+PERMITIDO estacionar ( km > 60)
+PROIBIDO  estacionar (km > 10)
+
+NÃO TEM CONFLITO MÚLTIPLO, MAS A ANÁLISE É DIFERENTE DA ANÁLISE DA ABORDAGEM ANTERIOR
+
+
+========================================================================================================================
+ANÁLISE CASO 4 - action obj (param1 = {value1}, param2 = {value2}, ...)
+========================================================================================================================
+==>EXEMPLOS DOMÍNIO 1
+DESCRIÇÃO: Neste caso caso os parâmetros podem ter valores e existe uma estrutura hierárquica entre eles no qual um parâmetro caracteriza os outros.
+vestimenta = 	calça, camisa
+cor = 			branca, preta, azul, vermelho, lilás
+passada = 		passada, amarrotada
+estampa = 		horizontal, vertical, lisa, rajada
+
+PERMITIDO vestir camisa(branca,passada,lisa) 		PERMITIDO {camisa} {branca} {passada} {lisa}
+PROIBIDO vestir camisa(preta,passada,lisa)			PERMITIDO {camisa} {branca, vermelha, azul, lilás} {amarrotada} {horizontal,  vertical, rajada}
+PROIBIDO vestir camisa(azul,passada,lisa)			PERMITIDO {camisa} {branca, preta, vermelha, lilás} {amarrotada} {horizontal, vertical, rajada}
+PROIBIDO vestir camisa(vermelha,passada,listrada)	PERMITIDO {camisa} {branca, preta, azul, lilás} {amarrotada}
+
+PERMITIDO vestir camisa(branca,passada,lisa) 	agente A é PERMITIDO a vestir camisa branca
+PERMITIDO vestir calça(branca,passada,lisa)		agente A é PERMITIDO a vestir calça branca
+PROIBIDO vestir calça(A,passada,lisa)			agente A é PROIBIDO a vestir calça e camisa da mesma cor
+PROIBIDO vestir camisa(A,passada,lisa)			agente A é PROIBIDO a vestir calça e camisa da mesma cor
+
+PERMITIDO vestir camisa(branca,passada,lisa) 	agente A é PERMITIDO a vestir camisa branca
+PERMITIDO vestir calça(branca,passada,lisa)		agente A é PERMITIDO a vestir calça branca
+PROIBIDO vestir calça(!A,passada,lisa)			agente A é PROIBIDO a vestir calça e camisa cores diferentes
+PROIBIDO vestir camisa(!A,passada,lisa)			agente A é PROIBIDO a vestir calça e camisa cores diferentes
+
+PERMITIDO vestir camisa(branca,A,lisa) 				agente A é PERMITIDO a vestir camisa branca
+PERMITIDO vestir calça(branca,A,lisa)				agente A é PERMITIDO a vestir calça branca
+PROIBIDO vestir calça(branca,passada,lisa)			agente A é PROIBIDO a vestir calça e camisa cores diferentes
+PROIBIDO vestir camisa(branca,passada,lisa)			agente A é PROIBIDO a vestir calça e camisa cores diferentes
+
+
+PERMITIDO vestir camisa(branca,A,lisa) 
+PERMITIDO vestir camisa(branca,A,lisa)		
+PROIBIDO vestir calça(branca,passada,lisa)			
+PROIBIDO vestir camisa(branca,passada,lisa)
+
+==>EXEMPLOS DOMÍNIO 2
+vestimenta = 		apito, cartao, tenis, meiao
+parte_do_corpo = 	boca, bolso, pe
+cor = 				preto, amarelo, vermelho, verde
+
+OBRIGADO 	usar apito	 (boca,	 preto)
+PERMITIDO 	usar cartao (bolsso, amarelo)
+PROIBIDO 	usar(tenis,	 pe,     vermelho)
+
+OBRIGADO 	usar apito (boca,	 preto)
+OBRIGADO 	usar cartao (bolsso, amarelo)
+OBRIGADO 	usar tenis	 (pe,     vermelho)
+OBRIGADO 	usar tenis	 (pe,     A)
+OBRIGADO 	usar tenis	 (pe,     A)
+
+OBRIGADO 	usar apito	 (boca,	 preto)
+OBRIGADO 	usar cartao  (bolsso, amarelo)
+OBRIGADO 	usar tenis	 (pe,     vermelho)
+OBRIGADO 	usar tenis	 (pe,     A)
+OBRIGADO 	usar cartao	 (pe,     A)
+
+OBRIGADO 	usar apito	 (boca,	 preto)
+OBRIGADO 	usar cartao  (bolsso, amarelo)
+OBRIGADO 	usar tenis	 (pe,     vermelho)
+OBRIGADO 	usar tenis	 (pe,     A)
+OBRIGADO 	usar cartao	 (pe,     A)
+OBRIGADO 	usar apito	 (boca,	 A)
+
+OBRIGADO 	usar apito	 (boca,	 preto)
+OBRIGADO 	usar cartao  (bolsso, amarelo)
+OBRIGADO 	usar tenis	 (pe,     vermelho)
+OBRIGADO 	usar tenis	 (pe,     A)
+OBRIGADO 	usar cartao	 (pe,     A)
+OBRIGADO 	usar apito	 (boca,	 A)
+
+OBRIGADO 	usar apito	 (boca,	 preto)
+PERMITIDO 	usar cartao (bolsso, amarelo)
+PROIBIDO 	usar tenis	 (pe,     A)
+
+
+========================================================================================================================
+
